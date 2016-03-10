@@ -1,0 +1,27 @@
+Classes
+
+class checker:
+    vars:
+        - has position
+        - has owner
+    methods:
+        - update position
+        - get position
+
+class board:
+    vars:
+        - list of checkers
+    methods:
+        - find checker at position
+        - remove checker at position
+        - print board
+        - number of checkers belonging to a player
+        - can a player make a move
+        - is move legal
+
+class game:
+    vars:
+        - one board
+    methods:
+        - get action from player1
+        - get action from player2
