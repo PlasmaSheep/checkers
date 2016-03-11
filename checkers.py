@@ -31,6 +31,21 @@ class Checkboard(object):
         return board
 
 
+    def moved(self, row, col, nr, coldir, s):
+        nc = col + coldir
+        nnc = col + 2 * coldir
+        if nc < 0 or nc > 7:
+            return False  # this piece can not move
+
+        if nc not in self.checkers[nr]:
+            self.checkers[nr][nc] = self.checkers[row][col]
+            del self.checkers[row][col]
+            s.remove((row, col))
+            s.add((nr, nc))
+            return True
+        return False
+
+
     def move(self, color):
         if color == 'w':
             s = self.whites
@@ -42,25 +57,9 @@ class Checkboard(object):
         for row, col in bs:
             nr = row + dir
             if row >= 0 and row < 8:
-                nc = col - 1
-                if nc < 0:
-                    continue
-                if nc not in self.checkers[nr]:
-                    self.checkers[nr][nc] = self.checkers[row][col]
-                    del self.checkers[row][col]
-                    s.remove((row, col))
-                    s.add((nr, nc))
-                    return True
-
-                nc = col + 1
-                if nc > 7:
-                    continue
-                if nc not in self.checkers[nr]:
-                    self.checkers[nr][nc] = self.checkers[row][col]
-                    del self.checkers[row][col]
-                    s.remove((row, col))
-                    s.add((nr, nc))
-                    return True
+                for coldir in (1, -1):
+                    if self.moved(row, col, nr, coldir, s):
+                        return True
         return False
 
 
