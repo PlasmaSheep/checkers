@@ -125,7 +125,7 @@ class Checkboard(object):
         return False
 
 
-def get_coord():
+def get_coord(cb):
     while True:
         sys.stdout.write('Your move: ')
         sys.stdout.flush()
@@ -136,7 +136,7 @@ def get_coord():
             sys.exit(1)
         if len(line) == 3:
             row, col, dir = (int(x) for x in line)
-            if row >= 0 and row < 8 and col >= 0 and col < 8 and dir >= 0 and dir < 2:
+            if cb.checkers[row].get(col, '') == 'b' and dir < 2:
                 return row, col, dir * 2 - 1
         sys.stdout.write('Invalid input, try again\n')
 
@@ -147,7 +147,7 @@ while keepgoing:
         if not cb.move('w'):
             break
         print cb
-        row, col, dir = get_coord()
+        row, col, dir = get_coord(cb)
         if cb.captured(row, col, -1, dir, 'b') or cb.moved(row, col, -1, dir, 'b'):
             continue
         break
