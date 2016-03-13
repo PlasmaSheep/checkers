@@ -1,5 +1,7 @@
 #!/usr/bin/python
 
+import sys
+
 class Checkboard(object):
     def __init__(self):
         self.whites = set()  # All white pieces, tuples of coordinates
@@ -83,6 +85,18 @@ class Checkboard(object):
         return False
 
 
+    def try_capture(self, row, col, rowdir, color):
+        for coldir in (1, -1):
+            if self.captured(row, col, rowdir, coldir, color):
+                return True
+        return False
+
+    def try_move(self, row, col, rowdir, color):
+        for coldir in (1, -1):
+            if self.moved(row, col, rowdir, coldir, color):
+                return True
+        return False
+
     def move(self, color):
         # create a copy set, so that we can iterate over it and modify the original set
         if color == 'w':
@@ -94,24 +108,39 @@ class Checkboard(object):
 
         # Captures when possible must proceed, try them first
         for row, col in cs:
-            for coldir in (1, -1):
-                if self.captured(row, col, rowdir, coldir, color):
-                    return True
-
+            if self.try_capture(row, col, rowdir, color):
+                return True
         for row, col in cs:
-            for coldir in (1, -1):
-                if self.moved(row, col, rowdir, coldir, color):
+            if self.try_move(row, col, rowdir, color):
                     return True
         return False
 
 
+def get_coord():
+    while True:
+        sys.stdout.write('Your move: ')
+        sys.stdout.flush()
+        line = sys.stdin.readline().strip()
+        if len(line) == 3:
+            row, col, dir = (int(x) for x in line)
+            if row >= 0 and row < 8 and col >= 0 and col < 7 and dir >= 0 and dir < 2:
+                return row, col, dir - 1
+        sys.stdout.write('Invalid input, try again\n')
+
 cb = Checkboard()
 keepgoing = True
 while keepgoing:
+    if True:  # Computer vs human
+        if not cb.move('w'):
+            break
+        print cb
+        row, col, dir = get_coord()
+        if cb.captured(row, col, -1, dir, 'b') or cb.moved(row, col, -1, dir, 'b'):
+            continue
+        break
     for color in ('w', 'b'):
         print '\nbefore %s move :' % color
         print cb
         if not cb.move(color):
             keepgoing = False
             break
-
