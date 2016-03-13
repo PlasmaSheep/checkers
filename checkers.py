@@ -132,8 +132,8 @@ def get_coord():
         line = sys.stdin.readline().strip()
         if len(line) == 3:
             row, col, dir = (int(x) for x in line)
-            if row >= 0 and row < 8 and col >= 0 and col < 7 and dir >= 0 and dir < 2:
-                return row, col, dir - 1
+            if row >= 0 and row < 8 and col >= 0 and col < 8 and dir >= 0 and dir < 2:
+                return row, col, dir * 2 - 1
         sys.stdout.write('Invalid input, try again\n')
 
 cb = Checkboard()
