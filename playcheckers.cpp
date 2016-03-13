@@ -1,7 +1,8 @@
 #include "checkers.h"
 
 int main() {
-    Board board;
-    board.print_board();
+    Game game;
+    
+    game.play();
     return 0;
 }
