@@ -25,11 +25,20 @@ class Checkboard(object):
                     s.add((row, col))
 
     def __str__(self):
-        board = ''
+        separator = ' ' + '+-' * 8 + '+\n'
+        board = separator
         for row in range(7, -1, -1):
+            board += str(row)
             for col in range(8):
-                board += self.checkers[row].get(col, '.')
-            board += '\n'
+                if (row ^ col) & 1:
+                    check = ' '
+                else:
+                    check = '.'
+                board += '|' + self.checkers[row].get(col, check)
+            board += '|\n' + separator
+        board += ' '
+        for col in range(8):
+            board += ' ' + str(col)
         return board
 
     # Return true if the piece in [row][col] was able to capture an opponent piece
