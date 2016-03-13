@@ -129,7 +129,11 @@ def get_coord():
     while True:
         sys.stdout.write('Your move: ')
         sys.stdout.flush()
-        line = sys.stdin.readline().strip()
+        try:
+            line = sys.stdin.readline().strip()
+        except KeyboardInterrupt:
+            print
+            sys.exit(1)
         if len(line) == 3:
             row, col, dir = (int(x) for x in line)
             if row >= 0 and row < 8 and col >= 0 and col < 8 and dir >= 0 and dir < 2:
