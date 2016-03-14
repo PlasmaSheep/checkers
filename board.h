@@ -1,8 +1,8 @@
-#ifndef __CHECKERS_H__
-#define __CHECKERS_H__
-#include <iostream>
-#include <unordered_set>
+#ifndef __BOARD_H__
+#define __BOARD_H__
 
+#include <unordered_set>
+#include "checker.h"
 using namespace std;
 
 #define NUM_CHECKERS 12
@@ -18,26 +18,17 @@ const int player1_start_y[NUM_CHECKERS] = {7, 7, 7, 7, 6, 6, 6, 6, 5, 5, 5, 5};
 
 const int player_symbols[NUM_PLAYERS] = {'X', 'O'};
 
-const int diagonal_offsets[2][2] = {
-    {-1, -1},
-    {-1, 1},
-};    
-
-class Checker {
-    private:
-        int player;
-        int x_pos;
-        int y_pos;
-    public:
-        Checker(const int player, const int x_pos, const int y_pos);
-        int get_player() const;
-        void set_player(const int player);
-        int get_x() const;
-        int get_y() const;
-        void set_x(const int);
-        void set_y(const int);
-        void set_alive(const bool alive);
+const int vectors[2][2][2] = {
+    {
+        {-1, 1}, //only for player 0
+        {1, 1},  //only for player 0
+    },
+    {
+        {-1, -1},  //only for player 1
+        {1, -1},   //only for player1
+    },
 };
+
 
 class Board {
     private:
@@ -56,21 +47,11 @@ class Board {
         int get_capture_vector(const Checker& checker) const;
         bool is_move_capture(const Checker& checker, const int x_end,
                 const int y_end) const;
-        bool is_position_legal(const int x, const int y) const; 
+        bool is_position_legal(const int x, const int y) const;
         bool can_player_move_piece(const int x, const int y, const int player) const;
         bool can_player_move_piece(const Checker& checker, const int player) const;
         void make_random_move(int player);
         void make_capture(Checker& checker, const int vector);
 };
 
-class Game {
-    private:
-        Board board;
-        void get_player0_move();
-        void get_player1_move();
-    public:
-        Game();
-        int play(); 
-};
-
-#endif //__CHECKERS_H__
+#endif //__GAME_H__
