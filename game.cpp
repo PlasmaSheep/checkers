@@ -47,6 +47,23 @@ void Game::get_player0_move() {
     board.make_random_move(0);
 }
 
+void Game::input_next_move(int &start_x, int &start_y, int &end_x, int &end_y)
+{
+    string ui;
+    cin >> ui;
+
+    start_x = -1;
+
+    if (ui.length() != 4) {
+	return;
+    }
+
+    start_x = ui[0] - '0';
+    start_y = ui[1] - '0';
+    end_x = ui[2] - '0';
+    end_y = ui[3] - '0';
+}
+
 void Game::get_player1_move() {
     //Code to get player moves
     int start_x = -1, start_y = -1, end_x = -1, end_y = -1;
@@ -54,21 +71,15 @@ void Game::get_player1_move() {
     printf("Human's turn\n");
 
     while(true) {
-        do {
-            do {
-                printf("X position of piece to move: ");
-                cin >> start_x;
-                printf("Y position of piece to move: ");
-                cin >> start_y;
-            } while(not board.can_player_move_piece(start_x, start_y, 1));
-
-            do {
-                printf("X position of destination: ");
-                cin >> end_x;
-                printf("Y position of destination: ");
-                cin >> end_y;
-            } while(not board.is_position_legal(end_x, end_y));
-        } while(not board.is_move_legal(start_x, start_y, end_x, end_y, 1));
+	while (true) {
+                printf("Enter your next move (4 symbols, from XY to XY): ");
+		input_next_move(start_x, start_y, end_x, end_y);
+		if (board.can_player_move_piece(start_x, start_y, 1) &&
+		    board.is_position_legal(end_x, end_y) &&
+		    board.is_move_legal(start_x, start_y, end_x, end_y, 1))
+		    break;
+		printf("this seems illegal\n");
+	}
 
         Checker* checker = board.get_checker_at(start_x, start_y);
 
