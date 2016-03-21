@@ -13,6 +13,10 @@ Board::Board() {
     }
 }
 
+int Board::y_for_player(int player) const {
+    return player ? -1 : 1;
+}
+
 Checker* Board::get_checker_at(const int x, const int y) const {
     for(Checker* checker : checkers) {
         if(checker->get_x() == x and checker->get_y() == y) {
@@ -67,12 +71,13 @@ int Board::player_checker_count(const int playernum) const {
 int Board::get_capture_vector(const Checker& checker) const {
     int x = checker.get_x();
     int y = checker.get_y();
-    for(size_t i = 0; i < 2; i++) {
-        int x_offset = vectors[checker.get_player()][i][0];
-        int y_offset = vectors[checker.get_player()][i][1];
+    int y_offset = y_for_player(checker.get_player());
+
+    for(int i = 0;  i < 2; i++) {
+	int x_offset = 1 - i * 2;
 
         Checker* victim = get_checker_at(x + x_offset,
-                y + y_offset);
+					 y + y_offset);
 
         if(not victim or victim->get_player() == checker.get_player()) {
             continue;
@@ -82,7 +87,7 @@ int Board::get_capture_vector(const Checker& checker) const {
                 victim->get_y() + y_offset);
 
         if(not space) { //Empty space
-            return i;
+		return i;
         }
     }
     return -1;
@@ -116,9 +121,9 @@ bool Board::can_player_move(const int playernum) const {
         if(checker->get_player() != playernum) {
             continue;
         }
+	int new_y = checker->get_y() + y_for_player(playernum);
         for(size_t i = 0; i < 2; i++) {
-            int new_x = checker->get_x() + vectors[playernum][i][0];
-            int new_y = checker->get_y() + vectors[playernum][i][1];
+            int new_x = checker->get_x() + 1 - i * 2;
             if(not is_position_legal(new_x, new_y)) {
                 continue;
             }
@@ -135,10 +140,13 @@ bool Board::is_position_legal(const int x, const int y) const {
 }
 
 bool Board::is_move_legal(const Checker& piece, const int vector, const int player) const {
+    int y_dir = y_for_player(player);
+    int x_dir = vector ? 1 : -1;
+
     return is_move_legal(piece.get_x(), piece.get_y(),
-            piece.get_x() + vectors[player][vector][0],
-            piece.get_y() + vectors[player][vector][1],
-            player);
+			 piece.get_x() + x_dir,
+			 piece.get_y() + y_dir,
+			 player);
 }
 
 bool Board::is_move_legal(const int x_start, const int y_start,
@@ -196,16 +204,18 @@ bool Board::can_player_move_piece(const int x, const int y, const int player) co
        return false;
     }
 
+    int y_dir = y_for_player(player);
+
     for(size_t i = 0; i < 2; i++) {
-        if(not get_checker_at(x + vectors[player][i][0],
-                    y + vectors[player][i][1])) {
+	int x_dir = 1 - i * 2;
+
+        if(not get_checker_at(x + x_dir,  y + y_dir)) {
             return true;
-        } else if(is_position_legal(x + vectors[player][i][0] * 2,
-                    y + vectors[player][i][1] * 2)) {
-            Checker* space = get_checker_at(x + vectors[player][i][0] * 2,
-                    y + vectors[player][i][1] * 2);
-            Checker* victim = get_checker_at(x + vectors[player][i][0],
-                    y + vectors[player][i][1]);
+        }
+	if(is_position_legal(x + x_dir * 2, y + y_dir * 2)) {
+            Checker* space = get_checker_at(x + x_dir * 2,
+					    y + y_dir * 2);
+            Checker* victim = get_checker_at(x + x_dir, y + y_dir);
             if(victim and victim->get_player() != player and not space) {
                 return true;
             }
@@ -220,8 +230,9 @@ bool Board::can_player_move_piece(const int x, const int y, const int player) co
 void Board::make_capture(Checker& piece, const int vector) {
     int start_x = piece.get_x();
     int start_y = piece.get_y();
-    int offset_x = vectors[piece.get_player()][vector][0];
-    int offset_y = vectors[piece.get_player()][vector][1];
+    int player = piece.get_player();
+    int offset_x = vector ? 1 : -1;
+    int offset_y = y_for_player(player);
     kill_checker_at(start_x + offset_x, start_y + offset_y);
     piece.set_x(start_x + offset_x * 2);
     piece.set_y(start_y + offset_y * 2);
@@ -259,7 +270,7 @@ void Board::make_random_move(const int player) {
         if(!is_move_legal(*piece, direction, player)) {
             direction = (direction + 1) % 2;
         }
-        piece->set_x(piece->get_x() + vectors[player][direction][0]);
-        piece->set_y(piece->get_y() + vectors[player][direction][1]);
+        piece->set_x(piece->get_x() + (direction ? 1 : -1));
+        piece->set_y(piece->get_y() + y_for_player(player));
     }
 }

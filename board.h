@@ -18,21 +18,11 @@ const int player1_start_y[NUM_CHECKERS] = {7, 7, 7, 7, 6, 6, 6, 6, 5, 5, 5, 5};
 
 const int player_symbols[NUM_PLAYERS] = {'X', 'O'};
 
-const int vectors[2][2][2] = {
-    {
-        {-1, 1}, //only for player 0
-        {1, 1},  //only for player 0
-    },
-    {
-        {-1, -1},  //only for player 1
-        {1, -1},   //only for player1
-    },
-};
-
-
 class Board {
     private:
         unordered_set<Checker*> checkers;
+	int y_for_player(int player) const;
+
     public:
         Board();
         Checker* get_checker_at(const int x, const int y) const;
