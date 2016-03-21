@@ -8,6 +8,7 @@ class Game {
         Board board;
         void get_player0_move();
         void get_player1_move();
+	void input_next_move(int &xs, int &ys, int &xe, int &ye);
     public:
         Game();
         int play();
