@@ -194,15 +194,9 @@ bool Board::can_player_move_piece(const Checker& checker, const int player) cons
 }
 
 bool Board::can_player_move_piece(const int x, const int y, const int player) const {
-    if(not is_position_legal(x, y)) {
-        return false;
-    }
     Checker* checker = get_checker_at(x, y);
-    if(not checker) {
-        return false;
-    }
 
-    if(checker->get_player() != player) {
+    if (!checker || (checker->get_player() != player)) {
        return false;
     }
 
