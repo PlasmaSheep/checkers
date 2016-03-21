@@ -40,6 +40,7 @@ void Board::print_board() const {
             player_symbols[checker->get_player()];
     }
 
+    printf("========\n");
     printf("  ");
     for(size_t i = 0; i < NUM_COLS; i++) {
         printf("%zu ", i);
@@ -56,6 +57,7 @@ void Board::print_board() const {
         }
         printf("\n");
     }
+    printf("========\n");
 }
 
 int Board::player_checker_count(const int playernum) const {

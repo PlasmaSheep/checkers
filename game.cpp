@@ -12,7 +12,6 @@ int Game::play() {
     int turn = 0;
 
     board.print_board();
-    printf("========\n");
 
     while(board.can_player_move(0) and board.can_player_move(1)) {
         if(turn == 0) {
@@ -22,9 +21,7 @@ int Game::play() {
         }
         turn = (turn + 1) % NUM_PLAYERS;
 
-        printf("========\n");
         board.print_board();
-        printf("========\n");
     }
 
     printf("Game over!");
