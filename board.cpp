@@ -211,7 +211,8 @@ bool Board::can_player_move_piece(const int x, const int y, const int player) co
     for(size_t i = 0; i < 2; i++) {
 	int x_dir = 1 - i * 2;
 
-        if(not get_checker_at(x + x_dir,  y + y_dir)) {
+        if(is_position_legal(x + x_dir, y + y_dir) &&
+	   not get_checker_at(x + x_dir,  y + y_dir)) {
             return true;
         }
 	if(is_position_legal(x + x_dir * 2, y + y_dir * 2)) {
