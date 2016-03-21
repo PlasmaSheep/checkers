@@ -1,5 +1,5 @@
 CC = g++
-CFLAGS = -g -Wall -Wextra -Werror -std=c++11
+CFLAGS = -g -O0 -Wall -Wextra -Werror -std=c++11
 CHECKERS_SOURCES = checker.cpp \
 				   game.cpp \
 				   board.cpp \
